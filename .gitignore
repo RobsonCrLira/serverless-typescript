@@ -1,0 +1,15 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# esbuild directories
+.esbuild
+
+# remove yarn package-lock
+yarn.lock
+yarn-error.log
+package-lock.json
+.dynamodb

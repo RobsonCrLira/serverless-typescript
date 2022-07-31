@@ -1,0 +1,52 @@
+{
+  "name": "sls-certificate",
+  "version": "1.0.0",
+  "description": "Serverless aws-nodejs-typescript template",
+  "main": "serverless.ts",
+  "scripts": {
+    "dev": "serverless offline",
+    "dynamodb:start": "serverless dynamodb start",
+    "dynamodb:install": "serverless dynamodb install",
+    "deploy": "serverless deploy --verbose"
+  },
+  "engines": {
+    "node": ">=14.15.0"
+  },
+  "dependencies": {
+    "@middy/core": "^2.5.3",
+    "@middy/http-json-body-parser": "^2.5.3",
+    "@types/aws-lambda": "^8.10.101",
+    "aws-sdk": "^2.1185.0",
+    "chrome-aws-lambda": "^10.1.0",
+    "handlebars": "^4.7.7",
+    "moment": "^2.29.4",
+    "puppeteer": "10.1.0",
+    "puppeteer-core": "10.1.0"
+  },
+  "devDependencies": {
+    "@serverless/typescript": "^3.0.0",
+    "@types/handlebars": "^4.1.0",
+    "@types/node": "^14.14.25",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "esbuild": "^0.14.11",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import-helpers": "^1.2.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "json-schema-to-ts": "^1.5.0",
+    "prettier": "^2.7.1",
+    "serverless": "^3.0.0",
+    "serverless-dynamodb-local": "^0.2.40",
+    "serverless-esbuild": "^1.23.3",
+    "serverless-offline": "^9.1.1",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.1.3"
+  },
+  "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
+  "license": "MIT"
+}
