@@ -4,6 +4,7 @@ import { join } from 'path';
 import { compile } from 'handlebars';
 import moment from 'moment';
 import chromium from 'chrome-aws-lambda';
+import { S3 } from 'aws-sdk';
 import { document } from '../utils/dynamodbDBClient';
 
 interface ICreateCertificate {
@@ -28,13 +29,6 @@ const compileCertificate = async (data: ITemplate) => {
 
 export const handler: APIGatewayProxyHandler = async (event) => {
 	const { id, name, grade } = JSON.parse(event.body) as ICreateCertificate;
-	await document
-		.put({
-			TableName: 'users_certificate',
-			Item: { id, name, grade },
-		})
-		.promise();
-
 	const response = await document
 		.query({
 			TableName: 'users_certificate',
@@ -44,6 +38,16 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 			},
 		})
 		.promise();
+
+	const userAlreadyExists = response.Items[0];
+	if (!userAlreadyExists) {
+		await document
+			.put({
+				TableName: 'users_certificate',
+				Item: { id, name, grade },
+			})
+			.promise();
+	}
 
 	const medalPath = join(process.cwd(), 'src', 'template', 'selo.png');
 	const medal = readFileSync(medalPath, 'base64');
@@ -61,6 +65,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 		args: chromium.args,
 		defaultViewport: chromium.defaultViewport,
 		executablePath: await chromium.executablePath,
+		userDataDir: './dev/null',
 	});
 
 	const page = await browser.newPage();
@@ -74,8 +79,29 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 	});
 
 	await browser.close();
+
+	const s3 = new S3();
+
+	// await s3
+	// 	.createBucket({
+	// 		Bucket: 'certificate-serverless-node',
+	// 	})
+	// 	.promise();
+
+	await s3
+		.putObject({
+			Bucket: 'certificate-serverless-node',
+			Key: `${id}.pdf`,
+			ACL: 'public-read',
+			Body: pdf,
+			ContentType: 'application/pdf',
+		})
+		.promise();
 	return {
 		statusCode: 201,
-		body: JSON.stringify(response.Items[0]),
+		body: JSON.stringify({
+			message: 'Certificate Create',
+			url: `https://certificate-serverless-node.s3.amazonaws.com/${id}.pdf`,
+		}),
 	};
 };

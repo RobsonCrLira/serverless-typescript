@@ -28,6 +28,11 @@ const serverlessConfiguration: AWS = {
 						Action: ['dynamodb:*'],
 						Resource: ['*'],
 					},
+					{
+						Effect: 'Allow',
+						Action: ['s3:*'],
+						Resource: ['*'],
+					},
 				],
 			},
 		},
@@ -48,9 +53,21 @@ const serverlessConfiguration: AWS = {
 				},
 			],
 		},
+		verifyCertificate: {
+			handler: 'src/functions/verifyCertificate.handler',
+			events: [
+				{
+					http: {
+						path: 'verifyCertificate/{id}',
+						method: 'GET',
+						cors: true,
+					},
+				},
+			],
+		},
 	},
 
-	package: { individually: true },
+	package: { individually: false, patterns: ['src/**'] },
 
 	custom: {
 		esbuild: {
